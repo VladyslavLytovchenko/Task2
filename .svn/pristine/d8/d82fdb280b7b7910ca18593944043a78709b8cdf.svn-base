@@ -1,0 +1,41 @@
+package ua.nure.lytovchenko.task2.part3;
+
+import ua.nure.lytovchenko.task2.part2.ListImpl;
+
+import javax.naming.event.ObjectChangeListener;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class QueueImpl extends ListImpl implements Queue<Object> {
+
+
+    @Override
+    public void enqueue(Object element) {
+        addLast(element);
+    }
+
+    @Override
+    public void clear() {
+        length=0;
+        head=null;
+    }
+
+    @Override
+    public int size() {
+        return length;
+    }
+
+    @Override
+    public Object dequeue() {
+        Object o = getFirst();
+        removeFirst();
+        return  o;
+    }
+
+    @Override
+    public Object top() {
+        return head;
+    }
+
+
+}

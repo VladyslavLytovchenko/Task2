@@ -1,0 +1,158 @@
+package ua.nure.lytovchenko.task2.part3;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class QueueImpl implements Queue<Object>{
+    private Node head ;
+    private Node current ;
+    private int length;
+
+
+    @Override
+    public void enqueue(Object element) {
+        if(head==null){
+            head=new Node(element);
+        }else{
+            current=head;
+            while (current.next!=null){
+                current=current.next;
+            }
+            current.next=new Node(element);
+            current.next.prev = current;
+        }
+        length++;
+    }
+
+    @Override
+    public void clear() {
+        length=0;
+        head=null;
+    }
+
+    @Override
+    public int size() {
+        return length;
+    }
+
+    @Override
+    public Object dequeue() {
+        Node tempNode;
+        if(head.next==null){
+            tempNode = head;
+            head=null;
+            return tempNode;
+        }
+        tempNode = head;
+        head=head.next;
+        head.prev=null;
+        length--;
+        return tempNode;
+    }
+
+    @Override
+    public Object top() {
+        return head;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        current=head;
+        while(current!=null){
+            sb.append(current.data.toString()).append(", ");
+            current=current.next;
+        }
+        return sb.length()!=1?(sb.toString().substring(0,sb.length()-2)+"]"):"[]";
+    }
+
+    @Override
+    public Iterator<Object> iterator() {
+        return new IteratorImpl();
+    }
+
+
+    class IteratorImpl implements Iterator<Object> {
+        private Node currentNode;
+        private boolean removed = true;
+
+        @Override
+        public boolean hasNext() {
+            if (head != null && currentNode == null) {
+                return true;
+            } else {
+                return currentNode.next != null;
+            }
+        }
+
+        @Override
+        public Object next() {
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+            if (currentNode == null) {
+                currentNode = head;
+            } else {
+                currentNode = currentNode.next;
+            }
+            removed = false;
+            return currentNode;
+        }
+
+        @Override
+        public void remove() {
+            if (removed) {
+                throw new IllegalStateException();
+            }
+            if (currentNode == head) {
+                dequeue();
+            } else if (currentNode.next == null) {
+                if(head.next==null){
+                    head=null;
+                    return;
+                }
+                current=head;
+                while (current.next.next!=null){
+                    current=current.next;
+                }
+                current.next=null;
+                length--;
+            } else {
+                currentNode.prev.next = currentNode.next;
+                length--;
+            }
+            removed = true;
+        }
+    }
+
+
+
+    static class Node{
+
+        private QueueImpl.Node next ;
+        private QueueImpl.Node prev ;
+        private Object data;
+
+        Node(){
+        }
+
+        Node(Object data){
+            this.data=data;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(data);
+        }
+
+
+    }
+
+
+    public static void main(String[] args) {
+        Queue q = new QueueImpl();
+        q.enqueue(new Object());
+        System.out.println(q.top());
+    }
+}

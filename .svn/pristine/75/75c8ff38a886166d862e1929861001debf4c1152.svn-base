@@ -1,0 +1,21 @@
+package ua.nure.lytovchenko.task2.part2;
+
+import ua.nure.lytovchenko.task2.Container;
+
+public interface List<E> extends Container<E> {
+    void addFirst(Object element);
+
+    void addLast(Object element);
+
+    void removeFirst();
+
+    void removeLast();
+
+    Object getFirst();
+
+    Object getLast();
+
+    Object search(Object element);
+
+    boolean remove(Object element);
+}

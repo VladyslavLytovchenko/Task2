@@ -1,0 +1,16 @@
+package ua.nure.lytovchenko.task2.part1;
+
+import ua.nure.lytovchenko.task2.Container;
+
+public interface Array<E> extends Container<E> {
+
+    void add(Object element);
+
+    void set(int index, Object element);
+
+    Object get(int index);
+
+    int indexOf(Object element);
+
+    void remove(int index);
+}

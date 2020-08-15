@@ -1,0 +1,14 @@
+package ua.nure.lytovchenko.task2.part4;
+
+import ua.nure.lytovchenko.task2.Container;
+
+public interface Stack extends Container {
+
+        void push(Object element);
+
+        Object pop();
+
+        Object top();
+}
+
+

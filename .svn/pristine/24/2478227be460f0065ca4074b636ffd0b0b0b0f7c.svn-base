@@ -1,0 +1,59 @@
+package ua.nure.lytovchenko.task2.part4;
+
+import ua.nure.lytovchenko.task2.part2.ListImpl;
+
+public class StackImpl extends ListImpl implements Stack<Object>{
+
+
+
+    @Override
+    public void push(Object element) {
+        addFirst(element);
+    }
+
+    @Override
+    public Object pop() {
+        Object o = getFirst();
+        removeFirst();
+        return o;
+    }
+
+    @Override
+    public Object top() {
+        return getFirst();
+    }
+
+    @Override
+    public void clear() {
+        head=null;
+        length=0;
+    }
+
+    @Override
+    public int size() {
+        return length;
+    }
+
+    @Override
+    public String toString() {
+        if(length==0) {
+            return "[]";
+        }
+        StringBuilder sb = new StringBuilder("[");
+        ListImpl list = new ListImpl();
+        current = head;
+        while (current != null) {
+            list.addFirst(current);
+            current = current.getNext();
+        }
+        for(Object o : list){
+            sb.append(o).append(", ");
+        }
+        return sb.toString().substring(0, sb.length() - 2)+"]";
+
+    }
+}
+
+
+
+

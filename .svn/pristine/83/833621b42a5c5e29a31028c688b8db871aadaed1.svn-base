@@ -1,0 +1,114 @@
+package ua.nure.lytovchenko.task2.part3;
+
+import ua.nure.lytovchenko.task2.part2.ListImpl;
+
+import javax.naming.event.ObjectChangeListener;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class QueueImpl extends ListImpl implements Queue<Object> {
+
+
+    @Override
+    public void enqueue(Object element) {
+        addLast(element);
+    }
+
+    @Override
+    public void clear() {
+        length=0;
+        head=null;
+    }
+
+    @Override
+    public int size() {
+        return length;
+    }
+
+    @Override
+    public Object dequeue() {
+        Object o = getFirst();
+        removeFirst();
+        return  o;
+    }
+
+    @Override
+    public Object top() {
+        return head;
+    }
+
+
+
+    @Override
+    public Iterator<Object> iterator() {
+        return new IteratorImpl();
+    }
+
+
+    class IteratorImpl implements Iterator<Object> {
+        private Node currentNode;
+        private boolean removed = true;
+
+        @Override
+        public boolean hasNext() {
+            if (head != null && currentNode == null) {
+                return true;
+            } else {
+                return currentNode.next != null;
+            }
+        }
+
+        @Override
+        public Object next() {
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+            if (currentNode == null) {
+                currentNode = head;
+            } else {
+                currentNode = currentNode.next;
+            }
+            removed = false;
+            return currentNode;
+        }
+
+        @Override
+        public void remove() {
+            if (removed) {
+                throw new IllegalStateException();
+            }
+            if (currentNode == head) {
+                dequeue();
+            } else if (currentNode.next == null) {
+                if(head.next==null){
+                    head=null;
+                    return;
+                }
+                current=head;
+                while (current.next.next!=null){
+                    current=current.next;
+                }
+                current.next=null;
+                length--;
+            } else {
+                currentNode.prev.next = currentNode.next;
+                length--;
+            }
+            removed = true;
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public static void main(String[] args) {
+        Queue<Object> q = new QueueImpl();
+        q.enqueue(new Object());
+        System.out.println(q.top());
+    }
+}

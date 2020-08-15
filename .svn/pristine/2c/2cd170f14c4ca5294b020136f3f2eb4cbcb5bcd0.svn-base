@@ -1,0 +1,151 @@
+package ua.nure.lytovchenko.task2.part4;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class StackImpl implements Stack{
+
+    private Node head ;
+    private Node tail ;
+    private Node current ;
+    private int length;
+
+    @Override
+    public void push(Object element) {
+        if(head==null){
+            head=new Node(element);
+            tail = head;
+        }else{
+            current=head;
+            while (current.next!=null){
+                current=current.next;
+            }
+            current.next=new Node(element);
+            current.next.prev = current;
+            tail = current.next;
+        }
+        length++;
+    }
+
+    @Override
+    public Object pop() {
+        Node tempNode;
+        if(head.next==null){
+            tempNode = head;
+            head=null;
+            return tempNode;
+        }
+        current=head;
+        while (current.next.next!=null){
+            current=current.next;
+        }
+        tempNode=current.next;
+        current.next=null;
+        tail=current;
+        length--;
+        return tempNode;
+    }
+
+    @Override
+    public Object top() {
+        return tail;
+    }
+
+    @Override
+    public void clear() {
+        head=null;
+        length=0;
+    }
+
+    @Override
+    public int size() {
+        return length;
+    }
+
+    @Override
+    public Iterator<Object> iterator() {
+        return new IteratorImpl();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        current=head;
+        while(current!=null){
+            sb.append(current.data.toString()).append(", ");
+            current=current.next;
+        }
+        return sb.length()!=1?(sb.toString().substring(0,sb.length()-2)+"]"):"[]";
+    }
+
+    class IteratorImpl implements Iterator {
+        private Node currentNode;
+        private boolean removed = true;
+
+        @Override
+        public boolean hasNext() {
+            if (tail != null && currentNode == null) {
+                return true;
+            } else {
+                return currentNode.prev != null;
+            }
+        }
+
+        @Override
+        public Object next() {
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+            if (currentNode == null) {
+                currentNode = tail;
+            } else {
+                currentNode = currentNode.prev;
+            }
+            removed = false;
+            return currentNode;
+        }
+
+        @Override
+        public void remove() {
+            if(removed){
+                throw new IllegalStateException();
+            }
+            if(currentNode==tail){
+                pop();
+            }else if(currentNode==head){
+                head=head.next;
+                head.next.prev=null;
+            }else{
+                currentNode.prev.next=currentNode.next;
+                length--;
+            }
+            removed=true;
+        }
+    }
+
+    static class Node{
+
+        private Node next;
+        private Node prev;
+        private Object data;
+
+        Node(){
+
+        }
+
+        Node(Object data){
+            this.data = String.valueOf(data);
+        }
+
+        @Override
+        public String toString() {
+            return data.toString();
+        }
+
+
+    }
+
+
+
+}
